@@ -3,6 +3,9 @@ from typing import Literal
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class Settings(BaseSettings):
@@ -19,7 +22,7 @@ class Settings(BaseSettings):
     target_resources_per_node: int = Field(default=3, ge=2, le=4)
     min_resources_per_node: int = Field(default=2, ge=1, le=4)
 
-    roadmap_generation_timeout_seconds: float = Field(default=15, gt=0)
+    roadmap_generation_timeout_seconds: float = Field(default=100, gt=0)
     link_validation_timeout_seconds: float = Field(default=3, gt=0)
 
     enable_link_validation: bool = True
