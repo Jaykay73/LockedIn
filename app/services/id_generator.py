@@ -1,6 +1,7 @@
 import hashlib
 import re
 import secrets
+import unicodedata
 from copy import deepcopy
 from typing import Any
 
@@ -12,6 +13,12 @@ def normalize_skill(skill: str) -> str:
     value = re.sub(r"\s+", "-", value)
     value = re.sub(r"-+", "-", value).strip("-")
     return value or "skill"
+
+
+def canonicalize_skill(skill: str) -> str:
+    value = unicodedata.normalize("NFKC", skill)
+    value = " ".join(value.strip().casefold().split())
+    return re.sub(r"^learn\s+", "", value)
 
 
 def request_hash(payload: dict[str, Any]) -> str:

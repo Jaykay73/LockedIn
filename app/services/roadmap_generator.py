@@ -12,10 +12,15 @@ from app.core.logging import log_failed_generation
 from app.prompts.repair_prompt import build_repair_prompt
 from app.prompts.roadmap_prompt import build_roadmap_prompt
 from app.schemas.requests import GenerateRoadmapRequest
-from app.schemas.roadmap import Roadmap, Resource, ResourceType, roadmap_to_jsonable
+from app.schemas.roadmap import ResourceType, Roadmap, roadmap_to_jsonable
 from app.services.cache import RoadmapCache
 from app.services.deepseek_client import DeepSeekClient
-from app.services.id_generator import assign_backend_ids, normalize_skill, request_hash
+from app.services.id_generator import (
+    assign_backend_ids,
+    canonicalize_skill,
+    normalize_skill,
+    request_hash,
+)
 from app.services.resource_filter import ResourceCandidate
 from app.services.resource_search import ResourceSearchService
 
@@ -37,7 +42,7 @@ class RoadmapGenerator:
         normalized = normalize_skill(request.skill)
         req_hash = request_hash(
             {
-                "normalized_skill": normalized,
+                "skill": canonicalize_skill(request.skill),
                 "user_level": request.user_level,
                 "goal": request.goal,
                 "time_commitment": request.time_commitment,
